@@ -22,6 +22,7 @@ const corresponding = {
 };
 
 export function Avatar(props) {
+  const audioRef = useRef(null);
   const { playAudio, script } = useControls({
     playAudio: false,
     script: {
@@ -76,10 +77,14 @@ export function Avatar(props) {
   });
 
   useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause(); // 既存の音声を停止
+      audioRef.current.currentTime = 0; // 再生位置を初期化
+    }
+
     if (playAudio) {
+      audioRef.current = audio; // 現在の音声をrefに設定
       audio.play();
-    } else {
-      audio.pause();
     }
   }, [playAudio, script]);
   const { nodes, materials } = useGLTF("/models/6514498a329bb21f5b7faaa7.glb");
