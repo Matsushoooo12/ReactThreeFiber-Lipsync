@@ -39,6 +39,13 @@ export function Avatar(props) {
   useFrame(() => {
     const currentAudioTime = audio.currentTime;
 
+    if (
+      animation !== "Idle" &&
+      actions[animation].time >= actions[animation]._clip.duration
+    ) {
+      setAnimation("Idle");
+    }
+
     Object.values(corresponding).forEach((value) => {
       nodes.Wolf3D_Head.morphTargetInfluences[
         nodes.Wolf3D_Head.morphTargetDictionary[value]
@@ -82,6 +89,17 @@ export function Avatar(props) {
     "/animations/Quick Formal Bow.fbx"
   );
 
+  useEffect(() => {
+    if (playAudio) {
+      if (script === "introduction") {
+        setAnimation("Greeting");
+      }
+      if (script === "rindo") {
+        setAnimation("Angry");
+      }
+    }
+  }, [playAudio, script]);
+
   idleAnimation[0].name = "Idle";
   angryAnimation[0].name = "Angry";
   greetingAnimation[0].name = "Greeting";
@@ -96,9 +114,17 @@ export function Avatar(props) {
   );
 
   useEffect(() => {
-    actions[animation].reset().fadeIn(0.5).play();
+    if (animation !== "Idle") {
+      actions[animation].reset().fadeIn(0.5).play();
+      actions[animation].loop = THREE.LoopOnce;
+      actions[animation].clampWhenFinished = true;
+    } else {
+      actions[animation].reset().fadeIn(0.5).play();
+      actions[animation].loop = THREE.LoopRepeat;
+    }
+
     return () => actions[animation].fadeOut(0.5);
-  }, []);
+  }, [animation, actions]);
 
   return (
     <group {...props} dispose={null} ref={group}>
