@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.2.13 public/models/6514498a329bb21f5b7faaa7.glb -o src/co
 */
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useAnimations, useFBX, useGLTF } from "@react-three/drei";
+import { Html, useAnimations, useFBX, useGLTF } from "@react-three/drei";
 import { useControls } from "leva";
 import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
@@ -133,6 +133,9 @@ export function Avatar(props) {
 
   return (
     <group {...props} dispose={null} ref={group}>
+      <Html>
+        <button onClick={() => audio.play()}>再生</button>
+      </Html>
       <primitive object={nodes.Hips} />
       <skinnedMesh
         geometry={nodes.Wolf3D_Body.geometry}
